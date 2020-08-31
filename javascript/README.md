@@ -2,7 +2,11 @@
 
 ## Lexical Grammer
 
-`ecma-262` 标准中有 4 种顶级输入元素，区分 `/` 是除号还是 `RegExp`，区分 `{` 是不是 `template`
+`ecma-262` 标准中有 4 种顶级输入元素，区分 `/` 是除号还是 `RegExp`，区分 `template` 中包不包含 `}`
+
+```js
+`hello${(function (){ return 'world'; })()}`
+```
 
 ### InputElement
 
