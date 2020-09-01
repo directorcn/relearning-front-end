@@ -311,3 +311,98 @@ false ? a() : b() // b
 
 ## Statements
 
+### Grammer
+
+* 简单语句
+
+  * ExpressionStatement
+  * EmptyStatement
+  * DebuggerStatement
+  * ThrowStatement
+  * ContinueStatement
+  * BreakStatement
+  * ReturnStatement
+
+* 复合语句
+
+  * **BlockStatement**
+
+    <div><pre>  {                          |      [[type]]: normal
+        ...                      |      [[value]]: --
+      }                          |      [[target]]: --</pre></div>
+
+    `BlockStatement` 一旦执行到非 `normal` 的语句，后面的语句就不会执行，这就是 `continue`，`break` 等语句可以改变代码执行顺序的基础逻辑。
+
+  * **IterationStatement**
+
+    ```
+    while(...) ...
+    do... while(...)
+    for (xxx; ...; ...) ...
+    for (xxx in ...) ...
+    for (xxx of ...) ...
+    for await (xxx of ...) ...
+    
+    xxx 可以放声明语句，for 循环会产生单独的作用域（父作用域）
+    ```
+
+    ```js
+    for (let i = 1; i <= 10; i ++) {
+        let i = 0;
+        console.log(i); // 10 个 0 
+    }
+    // () 父域；Block 子域
+    ```
+
+  * LabelledStatement
+
+  * SwitchStatement
+
+    <div><pre>LabelledStatement          |      [[type]]: break, continue
+    IterationStatement         |      [[value]]: --
+    ContinueStatement          |      [[target]]: label
+    BreakStatement             |
+    SwitchStatement            |</pre></div>
+
+  * TryStatement
+
+    <div><pre>  try {                    |     [[type]]: return
+        ...                    |     [[value]]: --
+      } catch(xxx) {           |     [[targrt]]: label
+        ...                    |
+      } finally {              |
+        ...                    |
+      }                        |</pre></div>
+
+    **`try {...} catch {...}` 语句 `{}` 不可以省略，它不是 BlockStatement，但是会产生作用域。**
+
+  * IfStatement
+
+  * WithStatement
+
+* 声明
+
+  * FunctionDeclaration
+  * GeneratorDeclaration
+  * AsyncFunctionDeclaration
+  * AsyncGeneratorDeclaration
+  * VariableStatement
+  * ClassDeclaration
+  * LexicalDeclaration
+
+### Runtime
+
+* Completion Record  *语句执行完成*
+
+> 用于描述异常、跳出等语句执行过程
+
+```
+[[type]]: normal, break, continue, return, throw
+[[value]]: Types
+[[target]]: label
+```
+
+* Lexical Environment
+
+
+
