@@ -193,21 +193,145 @@ parseFloat((0.1 + 0.2).toFixed(10)) // 0.3
 
 `Object`对象的定义是“属性的集合”。属性分为数据属性和访问器属性，二者都是 `key-value` 结构，`key` 可以是字符串或者 `Symbol` 类型。
 
+*对象：唯一、状态（描述对象）、行为（状态的改变）*
+
+* 在 `JavaScript` 运行时，原生对象的描述非常简单，我们只需要关心**原型**和**属性**两个部分。
+
+<div><pre>                 ┌─────────────────────────────────┐
+                 │             Object              │
+                 │         ┌─────────────┐         │
+                 │         │   Property  │         │
+                 │         ├─────────────┤         │
+                 │         │   Property  │         │
+                 │         ├─────────────┤         │
+                 │         │   Property  │         │
+                 │         └─────────────┘         │
+                 │                                 │                             
+                 │          [[Prototype]]          │
+                 └───────────────┼──┼──────────────┘
+                                _│  │_
+                                \    /
+                                 \  /
+                                  \/</pre></div>
+
+* `JavaScript` 用属性来统一抽象对象的**状态**（satate）和**行为**（behavior）。
+
+> 一般来说，数据属性用来描述状态，访问器属性用来描述行为；数据属性中如果存储函数，也是可以来描述行为的。
+
+<div><pre>    ┌─────────────────────────┐                ┌─────────────────────────┐
+    │      Data Property      │                │    Accessor Property    │
+    │     ┌─────────────┐     │                │     ┌─────────────┐     │
+    │     │  [[value]]  │     │                │     │     get     │     │
+    │     └─────────────┘     │                │     └─────────────┘     │
+    │     ┌─────────────┐     │                │     ┌─────────────┐     │
+    │     │   writable  │     │                │     │     set     │     │
+    │     └─────────────┘     │                │     └─────────────┘     │
+    │     ┌─────────────┐     │                │     ┌─────────────┐     │
+    │     │ enumerable  │     │                │     │ enumerable  │     │
+    │     └─────────────┘     │                │     └─────────────┘     │
+    │     ┌─────────────┐     │                │     ┌─────────────┐     │
+    │     │ configurable│     │                │     │ configurable│     │
+    │     └─────────────┘     │                │     └─────────────┘     │
+    └─────────────────────────┘                └─────────────────────────┘
+    writable: 是否可写
+    enumerable: 是否可以 for...in...可枚举
+    configurable: 属性是否可以改变</pre></div>
+* 原型链
+
+<div><pre>      ┌─────────────┐
+      │    Object   │
+      │             │
+      └─────┼──┼────┘
+             \/
+      ┌─────────────┐
+      │    Object   │
+      │             │
+      └─────┼──┼────┘
+             \/
+      ┌─────────────┐
+      │    Object   │
+      │             │
+      └─────────────┘</pre></div>
+
+
+*当我们访问属性时，如果当前对象没有，则会沿着原型找原型对象是否有此名称的属性，而原型对象还可能有原型，因此，会有“原型链”这一说法。这一算法保证了对象只需要描述自身与原型的区别即可。*
+
+#### API
+
+```
+{}    []    .    Object.defineProperty
+
+Object.create    Object.setPrototypeOf    Object.getPrototypeOf
+
+new    class    extends
+
+new    function    prototype (不建议使用)
+```
+
+#### Special Object
+
+##### Function Object
+
+<div><pre>      ┌─────────────┐
+      │    Object   │
+      │   [[Call]]  │
+      └─────────────┘</pre></div>
+除了一般对象的属性和原型，函数对象还有一个行为 `[[Call]]`。我们用 `JavaScript` 关键字、箭头运算符或者 `Function` 构造器创建的对象，都会有 `[[Call]]` 这个行为。我们用类似 `fn()` 这样的语法把对象当作函数调用时，会访问到 `[[Call]]` 这个行为。如果对应的对象没有 `[[Call]]` 行为就会报错。
+
+
+
+##### Array Object
+
+```js
+var a = [];
+a[10] = 10;
+a.length // 11
+Object.getOwnPropertyDescriptor(a, 'length'); // { value: 11, ... }
+```
+
+通过以上代码，你会发现 `length` 是 `Data Property`，但是作为一个 `Data Property`，我们并没有给它赋值，它是如何改变的呢？
+
+>The value of the "length" property is numerically greater than the name of every own property whose name is an array index; whenever an own property of an Array object is created or changed, other properties are adjusted as necessary to maintain this invariant. **Specifically, whenever an own property is added whose name is an array index, the value of the "length" property is changed, if necessary, to be one more than the numeric value of that array index;** and whenever the value of the "length" property is changed, every own property whose name is an array index whose value is not smaller than the new length is deleted. 
+>
+>[ecma-262  - 11.0 - 9.4.2 章节](https://www.ecma-international.org/ecma-262/11.0/index.html#sec-array-exotic-objects) 
+
+`Array` 的 `length` 属性根据最大的下标自动发生变化，最大索引 + 1
+
+
+
+##### Object.prototype
+
+```js
+Object.setPrototypeOf(Object.prototype, { a:1 });
+Object.getPrototypeOf(Object.prototype); // null
+```
+
+`Object.prototype` 已经是原型链的顶端了，不能再给它设置原型。
+
+
+
+##### String Object
+
+为了支持下标运算，String 的正整数属性访问会去字符串里查找。
+
+. . . 
+
 
 
 **原始数据类型存储在栈（stack）内存，引用数据类型存储在堆（heap）内存，栈内存存储的是堆地址。原始类型的赋值会完整复制变量值，而引用类型的赋值是复制引用地址。**
 
 <div><pre>
 ┌────────────────────────┐                       ┌────────────────────────┐
-│  variable environment  │                       │  地址   |      值       │
+│  variable environment  │                       │  地址   |       值      │
 ├────────┬───────────────┤                       ├────────┼───────────────┤
-│变量名   |     变量值     │                       │ ....   │               │
+│ 变量名  |      变量值    │                       │ ...    │               │
 ├────────┼───────────────┤                       ├────────┼───────────────┤
 │ foo    │      'foo'    │                       │ 1002   │               │
 ├────────┼───────────────┤                       ├────────┼───────────────┤
 │ bar    │      1003     │──────────────────────>│ 1003   │ {name: "bar"} │
 └────────┴───────────────┘                       └────────┴───────────────┘
         call stack                                          heap</pre></div>
+
 #### Q：为什么一定要分“堆”和“栈”两个存储空间呢？所有数据直接存放在“栈”中不就可以了吗？
 
 > `JavaScript` 引擎需要用栈来维护程序执行期间上下文的状态，如果栈空间大了话，所有的数据都存放在栈空间里面，那么会影响到上下文切换的效率，进而又影响到整个程序的执行效率。所以通常情况下，栈空间都不会设置太大，主要用来存放一些原始类型的小数据。而引用类型的数据占用的空间都比较大，所以这一类数据会被存放到堆中，堆空间很大，能存放很多大的数据，不过缺点是分配内存和回收内存都会占用一定的时间。
@@ -225,6 +349,8 @@ parseFloat((0.1 + 0.2).toFixed(10)) // 0.3
 > V8 依据代际假说，将堆内存划分为新生代和老生代两个区域，新生代中存放的是生存时间短的对象，老生代中存放生存时间久的对象。为了提升垃圾回收的效率，V8 设置了两个垃圾回收器，主垃圾回收器和副垃圾回收器。主垃圾回收器负责收集老生代中的垃圾数据，副垃圾回收器负责收集新生代中的垃圾数据。
 >
 > 副垃圾回收器采用了 Scavenge 算法，是把新生代空间对半划分为两个区域，一半是对象区域，一半是空闲区域。新的数据都分配在对象区域，等待对象区域快分配满的时候，垃圾回收器便执行垃圾回收操作，之后将存活的对象从对象区域拷贝到空闲区域，并将两个区域互换。主垃圾回收器回收器主要负责老生代中的垃圾数据的回收操作，会经历标记、清除和整理过程。
+>
+> [图解 Google V8 · V8 的两个垃圾回收器是如何工作的](https://time.geekbang.org/column/article/230845)
 
 
 
