@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Realm</title>
+    <style>
+        html,
+        body,
+        #container {
+            height: 100%;
+            padding: 0;
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+    <div id="container"></div>
+    <script src="https://gw.alipayobjects.com/os/antv/pkg/_antv.g6-3.7.0/dist/g6.min.js"></script>
+    <script src="./global.js"></script>
+    <script>
+        function init() {
+            const width = document.getElementById('container').scrollWidth;
+            const height = document.getElementById('container').scrollHeight;
+            const data = {
+                id: 'global',
+                prop: 'Global Object',
+                children,
+            };
+            const graph = new G6.TreeGraph({
+                container: 'container',
+                width,
+                height,
+                modes: {
+                    default: [
+                        {
+                            type: 'collapse-expand',
+                            onChange: function onChange(item, collapsed) {
+                                const data = item.get('model').data;
+                                data.collapsed = collapsed;
+                                return true;
+                            },
+                        },
+                        'drag-canvas',
+                        'zoom-canvas',
+                    ],
+                },
+                defaultNode: {
+                    size: 16,
+                    anchorPoints: [
+                        [0, 0.5],
+                        [1, 0.5]
+                    ],
+                    style: {
+                        fill: 'orange',
+                        stroke: '#ffffff',
+                    },
+                },
+                nodeStateStyles: {
+                    hover: {
+                        fill: 'orange',
+                        stroke: '#ffffff'
+                    }
+                },
+                defaultEdge: {
+                    type: 'cubic-horizontal',
+                    style: {
+                        stroke: 'orange',
+                    },
+                },
+                layout: {
+                    type: 'dendrogram',
+                    direction: 'LR',
+                    radial: true,
+                    nodeSep: 50,
+                    rankSep: 300
+                },
+                plugins: [
+                    new G6.Fisheye({
+                        trigger: 'drag',
+                        d: 2.5,
+                        r: 200,
+                        delegateStyle: {
+                            stroke: 'orange',
+                            strokeOpacity: 0.8,
+                            lineWidth: 2,
+                            fillOpacity: 0.1,
+                            fill: 'orange'
+                        }
+                    })
+                ]
+            });
+            graph.node(node => {
+                return {
+                    label: node.prop,
+                    labelCfg: {
+                        position: 'center',
+                        style: {
+                            fill: '#666',
+                            stroke: '#c0c0c0',
+                            fontSize: node.depth > 1 ? 20 : 12
+                        }
+                    },
+                    
+                };
+            });
+
+            G6.Util.traverseTree(data, item => {
+                item.collapsed = item.id.split('.').length > 0; 
+            })
+
+            graph.data(data);
+            graph.render();
+            graph.fitView();
+            return graph;
+        }
+
+        function handleNodeClick(event) {
+            var item = event.item;
+            // 聚焦当前点击的节点（把节点放到视口中心）
+            var matrix = item.get('group').getMatrix();
+            var point = {
+                x: matrix[6],
+                y: matrix[7]
+            };
+            var width = graph.get('width');
+            var height = graph.get('height');
+            // 找到视口中心
+            var viewCenter = {
+                x: width / 2,
+                y: height / 2
+            };
+            var modelCenter = graph.getPointByCanvas(viewCenter.x, viewCenter.y);
+            var viewportMatrix = graph.get('group').getMatrix();
+            // 画布平移的目标位置，最终目标是graph.translate(dx, dy);
+            var dx = (modelCenter.x - point.x) * viewportMatrix[0];
+            var dy = (modelCenter.y - point.y) * viewportMatrix[4];
+            var lastX = 0;
+            var lastY = 0;
+            var newX = void 0;
+            var newY = void 0;
+            // 动画每次平移一点，直到目标位置
+            graph.get('canvas').animate({
+                onFrame: function onFrame(ratio) {
+                    newX = dx * ratio;
+                    newY = dy * ratio;
+                    graph.translate(newX - lastX, newY - lastY);
+                    lastX = newX;
+                    lastY = newY;
+                }
+            }, 300, 'easeCubic');
+        }
+
+        let graph = init();
+        graph.on('node:click', handleNodeClick);
+    </script>
+</body>
+</html>

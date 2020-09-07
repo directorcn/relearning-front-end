@@ -406,3 +406,35 @@ false ? a() : b() // b
 
 
 
+## Realm
+
+> `Realm` 里有一套完整的 `JavaScript` 内置对象
+
+### Global Object
+
+#### Value properties
+
+<div><pre>globalThis    Infinity    NaN    undefined</pre></div>
+
+#### Function properties
+
+<div><pre>eval()         isFinite()              isNaN()        parseFloat()    parseInt()
+decodeURI()    decodeURIComponent()    encodeURI()    encodeURIComponent()</pre></div>
+
+
+#### Constructor Properties
+
+<div><pre>Array       ArrayBuffer    BigInt    BigInt64Array    BigUint64Array   Boolean
+DataView    Date           Error     EvalError        Float32Array    Float64Array
+Function    Int8Array      Int16Array    Int32Array   Map    Number    Object
+Promise     Proxy       RangeError   ReferenceError   RegExp           Set    SharedArrayBuffer       String       Symbol           SyntaxError      TypeError
+Uint8Array    Uint8ClampedArray      Uint16Array      Uint32Array      URIError    WeakMap     WeakSet</pre></div>
+
+#### Other Properties
+
+<div><pre>Atomics    JSON    Math    Reflect</pre></div>
+
+[<img src="https://raw.githubusercontent.com/directorcn/images/master/relearning-fe/javascript/global.png"/>]()
+
+
+
