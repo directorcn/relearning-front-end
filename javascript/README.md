@@ -434,7 +434,7 @@ Uint8Array    Uint8ClampedArray      Uint16Array      Uint32Array      URIError 
 
 <div><pre>Atomics    JSON    Math    Reflect</pre></div>
 
-[<img src="https://raw.githubusercontent.com/directorcn/images/master/relearning-fe/javascript/global.png"/>]()
+[<img src="https://raw.githubusercontent.com/directorcn/images/master/relearning-fe/javascript/global.png"/>](https://directorcn.github.io/links/static/global.html)
 
 
 
