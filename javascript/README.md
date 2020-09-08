@@ -504,6 +504,7 @@ WeakMap     WeakSet</pre></div>
 │      Function     │ │       Module      │
 │Environment Records│ │Environment Records│
 └───────────────────┘ └───────────────────┘</pre></div>
+
 [Closure](https://xie.infoq.cn/article/ad4e31f7153fb606f020bf4df) 推荐一下，对理解执行上下文有帮助。
 
 
