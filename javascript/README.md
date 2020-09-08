@@ -410,6 +410,20 @@ false ? a() : b() // b
 
 > `Realm` 里有一套完整的 `JavaScript` 内置对象
 
+在 `JavaScript` 中，函数表达式和对象直接量均会创建对象，使用 `.` 做隐士转换也会创建对象；这些对象也是有原型的，如果我们没有 `Realm`，就不知道它们的原型是什么。
+
+```js
+var iframe = document.createElement('iframe');
+document.body.appendChild(iframe);
+iframe.contentWindow.eval('this.o = {}');
+var o1 = iframe.contentWindow.o;
+o1 instanceof Object; // false
+Object.getPrototypeOf(o1) === Object.prototype; // false
+// 不是同一个 realm
+// 函数表达式
+```
+
+
 ### Global Object
 
 #### Value properties
@@ -420,15 +434,16 @@ false ? a() : b() // b
 
 <div><pre>eval()         isFinite()              isNaN()        parseFloat()    parseInt()
 decodeURI()    decodeURIComponent()    encodeURI()    encodeURIComponent()</pre></div>
-
-
 #### Constructor Properties
 
 <div><pre>Array       ArrayBuffer    BigInt    BigInt64Array    BigUint64Array   Boolean
 DataView    Date           Error     EvalError        Float32Array    Float64Array
 Function    Int8Array      Int16Array    Int32Array   Map    Number    Object
-Promise     Proxy       RangeError   ReferenceError   RegExp           Set    SharedArrayBuffer       String       Symbol           SyntaxError      TypeError
-Uint8Array    Uint8ClampedArray      Uint16Array      Uint32Array      URIError    WeakMap     WeakSet</pre></div>
+Promise     Proxy       RangeError   ReferenceError   RegExp           Set
+SharedArrayBuffer       String       Symbol           SyntaxError      TypeError
+Uint8Array    Uint8ClampedArray      Uint16Array      Uint32Array      URIError
+WeakMap     WeakSet</pre></div>
+
 
 #### Other Properties
 
@@ -436,5 +451,59 @@ Uint8Array    Uint8ClampedArray      Uint16Array      Uint32Array      URIError 
 
 [<img src="https://raw.githubusercontent.com/directorcn/images/master/relearning-fe/javascript/global.png"/>](https://directorcn.github.io/links/static/global.html)
 
+## 函数调用
+
+### Execution Context *执行上下文*
+
+> **Execution Context Stack**  执行上下文栈
+>
+> StackTop <=> **Running Execution Context**
+
+<div><pre>            ┌──────────────────────────────────────────────────────────────┐
+            │     ┌─────────────────────┐          ┌─────────────┐         │
+            │     │code evaluation state│          │    Realm    │         │
+            │     └─────────────────────┘          │             │         │
+            │     ┌─────────────────────┐          └─────────────┘         │
+            │     │       Function      │      ┌─────────────────────┐     │
+            │     └─────────────────────┘      │ LexicalEnvironment  │     │
+            │     ┌─────────────────────┐      └─────────────────────┘     │
+            │     │   Script or Module  │                                  │
+            │     └─────────────────────┘      ┌─────────────────────┐     │
+            │     ┌─────────────────────┐      │ VariableEnvironment │     │
+            │     │      Generator      │      └─────────────────────┘     │
+            │     └─────────────────────┘                                  │
+            └──────────────────────────────────────────────────────────────┘</pre></div>
+
+* **code evaluation state**
+
+  `async`，`await` 以及 `generator` 需要记录代码执行的位置
+
+* **LexicalEnvironment**
+
+  * `this`
+  * `new.target`
+  * `super`
+  * 变量：`let`、`const` 声明
+
+* **VariableEnvironment**
+
+  处理 `var` 声明，历史遗留包袱。
+
+#### Environment Record
+
+<div><pre>                           ┌──────────────────────┐
+                           │  Environment Records │
+                           └───────────┬──────────┘
+                  ┌────────────────────┼──────────────────────┐
+       ┌──────────┴────────┐ ┌─────────┴─────────┐ ┌──────────┴────────┐
+       │    Declarative    │ │       Global      │ │       Object      │
+       │Environment Records│ │Environment Records│ │Environment Records│
+       └──────────┬────────┘ └───────────────────┘ └───────────────────┘
+         ┌────────┴────────────┐
+┌────────┴──────────┐ ┌────────┴──────────┐
+│      Function     │ │       Module      │
+│Environment Records│ │Environment Records│
+└───────────────────┘ └───────────────────┘</pre></div>
+[Closure](https://xie.infoq.cn/article/ad4e31f7153fb606f020bf4df)  推荐一下，对理解执行上下文有帮助。
 
 
