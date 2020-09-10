@@ -434,6 +434,7 @@ Object.getPrototypeOf(o1) === Object.prototype; // false
 
 <div><pre>eval()         isFinite()              isNaN()        parseFloat()    parseInt()
 decodeURI()    decodeURIComponent()    encodeURI()    encodeURIComponent()</pre></div>
+
 #### Constructor Properties
 
 <div><pre>Array       ArrayBuffer    BigInt    BigInt64Array    BigUint64Array   Boolean
