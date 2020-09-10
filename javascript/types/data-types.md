@@ -236,6 +236,7 @@ parseFloat((0.1 + 0.2).toFixed(10)) // 0.3
     writable: 是否可写
     enumerable: 是否可以 for...in...可枚举
     configurable: 属性是否可以改变</pre></div>
+
 * 原型链
 
 <div><pre>      ┌─────────────┐
@@ -255,6 +256,36 @@ parseFloat((0.1 + 0.2).toFixed(10)) // 0.3
 
 
 *当我们访问属性时，如果当前对象没有，则会沿着原型找原型对象是否有此名称的属性，而原型对象还可能有原型，因此，会有“原型链”这一说法。这一算法保证了对象只需要描述自身与原型的区别即可。*
+
+#### Q：如何判断一个变量的数据类型？
+
+**A：**
+
+众所周知，`typeof` 运算符可以用来判断变量的类型（原始数据类型除了 `null` 都可以按预期返回），除了函数对象可以正确的返回 `function`，其它都是 `object`，（当然，`null` 也返回 `object`，历史遗留，这里不再赘述），这并不符合人类的预期，我们更希望能够返回正确的构造函数对象。`JavaScript` 中也提供了这样的运算符，它就是 `instanceof`。
+
+```js
+V instanceof Target
+```
+
+在 `V` 的原型链上，找 `Target` 的原型属性（`prototype`），存在返回 `true` ，否则 `fasle`。
+
+实现一个 `instanceof`
+
+```js
+function instance_of(V, Target) {
+    const O = Target.prototype; // 构造函数 Target 的显式原型
+    V = V.__proto__; // V 的隐式原型
+    while(true) {
+        if (V === null) // 找到了原型链的顶端
+            return fasle;
+        if (O === V) // 
+            return true;
+        V = V.__proto__; // 沿着原型链向上一层查找
+    }
+}
+```
+
+
 
 #### API
 
