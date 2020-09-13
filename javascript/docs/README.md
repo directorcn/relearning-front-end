@@ -1,6 +1,6 @@
 # JavaScript
 
-## var、let 以及 const 的区别
+##### var、let 以及 const 的区别
 
 - `var` 声明的变量存在**变量提升**，局部提升（只提升声明部分，值为 `undefined`），可以重复声明；
 
@@ -42,7 +42,7 @@ a = 100;
 
 
 
-## for…of 与 for…in 区别
+##### for…of 与 for…in 区别
 
 - 具有 `Iterator` 接口的数据结构（数组，字符串，类数组，`Arguments`、`Map`，`Set` 等）都可以用 `for...of` **迭代** ，`for...of` 内部调用的是数据结构的 `[Symbol.iterator]` 方法；
 
@@ -65,7 +65,7 @@ arr.forEach(v => {
 
 
 
-## this
+##### this
 
 * 默认绑定：`this` 默认绑定全局对象，严格模式下，绑定 `undefined`；
 * `new` 绑定：函数被 `new` 调用，则 `this` 绑定到构造函数的实例对象；
@@ -85,7 +85,7 @@ arr.forEach(v => {
 
 
 
-## 箭头函数与普通函数的区别
+##### 箭头函数与普通函数的区别
 
 * 箭头函数没有 `arguments`；
 
@@ -99,7 +99,7 @@ arr.forEach(v => {
 
 
 
-## call、apply、bind
+##### call、apply、bind
 
 `call` 、`apply` 都可以改变 `this`，区别在于传参方式不同，第一个参数都是 `this`，`call` 接收的是一个**参数列表**，`apply` 接收的是一个**数组（或类数组）**。
 
@@ -155,7 +155,7 @@ Function.prototype._bind = function(context) {
 
 
 
-## new
+##### new
 
 * 以构造函数的 `prototype` 属性为原型创建一个新对象；
 
@@ -180,25 +180,17 @@ function _new(constructor) {
 
 
 
-## 继承
+##### [深拷贝、浅拷贝]()
 
-* [继承的几种方式]()
+##### [闭包](https://xie.infoq.cn/article/ad4e31f7153fb606f020bf4df)
 
+##### [继承](https://github.com/directorcn/relearning-front-end/blob/master/javascript/docs/%E7%BB%A7%E6%89%BF%E7%9A%84%E5%87%A0%E7%A7%8D%E6%96%B9%E5%BC%8F.md)
 
+##### [Promise 实现]()
 
-## 深拷贝、浅拷贝
+##### [事件捕获与冒泡]()
 
-
-
-## Promise
-
-
-
-## 事件捕获与冒泡
-
-
-
-## 防抖节流
+##### [防抖节流]()
 
 
 
