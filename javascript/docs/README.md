@@ -68,9 +68,13 @@ arr.forEach(v => {
 ##### this
 
 * 默认绑定：`this` 默认绑定全局对象，严格模式下，绑定 `undefined`；
+
 * `new` 绑定：函数被 `new` 调用，则 `this` 绑定到构造函数的实例对象；
+
 * 显式绑定：函数被 `call`，`apply` 调用，或者 `bind`，`this` 绑定到指定的对象，如果传入`null` 或者 `undefiend`，绑定到 `window`；
+
 * 隐式绑定：在某个执行上下文中调用，`this` 绑定到该执行上下文。
+
 * 箭头函数没有自己的 `this`，指向离它最近的非箭头函数。
 
 
@@ -180,17 +184,17 @@ function _new(constructor) {
 
 
 
-##### [深拷贝、浅拷贝]()
+##### [深拷贝、浅拷贝](https://github.com/directorcn/relearning-front-end/blob/master/javascript/docs/%E6%B7%B1%E6%8B%B7%E8%B4%9D%E3%80%81%E6%B5%85%E6%8B%B7%E8%B4%9D.md)
 
 ##### [闭包](https://xie.infoq.cn/article/ad4e31f7153fb606f020bf4df)
 
 ##### [继承](https://github.com/directorcn/relearning-front-end/blob/master/javascript/docs/%E7%BB%A7%E6%89%BF%E7%9A%84%E5%87%A0%E7%A7%8D%E6%96%B9%E5%BC%8F.md)
 
-##### [Promise 实现]()
+##### [Promise 实现](https://github.com/directorcn/relearning-front-end/blob/master/javascript/promise/promise.js)
 
-##### [事件捕获与冒泡]()
+##### [事件捕获与冒泡](https://github.com/directorcn/relearning-front-end/blob/master/javascript/docs/%E4%BA%8B%E4%BB%B6%E6%8D%95%E8%8E%B7%E4%B8%8E%E5%86%92%E6%B3%A1.md)
 
-##### [防抖节流]()
+##### [防抖节流](https://github.com/directorcn/relearning-front-end/blob/master/javascript/docs/%E9%98%B2%E6%8A%96%E8%8A%82%E6%B5%81.md)
 
 
 
