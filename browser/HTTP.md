@@ -109,4 +109,38 @@
 
 ### 强缓存、协商缓存
 
+**缓存的基本思路**：
+
+浏览器第一次访问某个页面的时候，服务器响应请求，在响应头 `Response Header` 中返回 `Last-Modified` (页面最后修改时间)，`ETag` (资源唯一标识)，`Cache-Control` (是否可缓存)。
+
+浏览器再次访问同一个页面，会在请求头 `Request Header` 中带上服务器返回的标识 `If-Modified-Since` 或 `If-None-Match`，判断当前缓存是否过期，没有过期，直接从缓存中读取，否则根据对应的标识属性判断服务端有没有做出更改（`If-Modified-Since` 的值与服务端 `Last-Modified` 一致，或者 `If-None-Match` 的值与服务端的 `ETag` 一致），若服务端无更改返回 `304`，从缓存中读取。
+
+
+
+* 强缓存
+
+> 强缓存通过 `Expires` 或 `Cache-Control` 两种响应头实现
+
+`Expires` 是 `HTTP 1.0` 的产物，它描述的是一个由服务器返回绝对时间。如果两端时间误差较大，或者修改了本地时间，可能造成缓存失效。`Cache-Control` 是 `HTTP 1.1` 出现的，优先级高于 `Expires`。
+
+`Cache-Control` 可能的取值：
+
+1. `no-store`：不允许缓存，用于某些变化非常频繁的数据
+
+2. `no-cache`：可以缓存，使用之前必须要去服务器验证是否过期，是否有最新的版本
+
+3. `must-revalidate`：如果缓存不过期就可以继续使用，但过期了如果还想用就必须去服务器验证
+
+4. `max-age=xx`：生存时间
+
+
+
+* 协商缓存
+
+> 协商缓存是利用 `If-Modified-Since` / `Last-Modified`，`If-None-Match` / `ETag` 两对 `Header` 属性来管理的。
+
+
+
+`ETag` 出现的历史原因是 `Last-Modified` 只做到了 “秒级别”的验证，无法辨识毫秒，微妙级别的校验，因此才出现了 `ETag`。
+
 
