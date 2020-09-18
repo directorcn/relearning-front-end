@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>debounce</title>
+    <style>
+        #container {
+            width: 800px;
+            height: 300px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            outline: 1px solid orange;
+        }
+    </style>
+</head>
+<body>
+    <div id="container"></div>
+    <script src="./debounce.js"></script>
+    <script src="./throttle.js"></script>
+    <script>
+        const container = document.getElementById('container');
+        let counter = 0;
+        container.innerText = counter;
+        function move(e) {
+            container.innerText = ++ counter;
+        }
+        // const f = debounce(move, 1000, true);
+        const f = throttle(move, 3000);
+        container.addEventListener('mousemove', f);
+    </script>
+</body>
+</html>
