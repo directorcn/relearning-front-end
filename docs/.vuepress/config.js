@@ -9,6 +9,7 @@ const css = require('./sidebar/css')
 module.exports = {
   title: 'RelearningFrontEnd',
   description: 'You are the owner of your career.',
+  base: '/relearning-front-end/',
   head: [
     ['link', { rel: 'icon', href: '/favicon.ico' }]
   ],
