@@ -1,4 +1,4 @@
-// const ecma = require('./sidebar/ecma')
+const ecma = require('./sidebar/ecma')
 // const browser = require('./sidebar/browser')
 // const programming = require('./sidebar/programming')
 const map = require('./sidebar/map')
@@ -17,7 +17,7 @@ module.exports = {
   themeConfig: {
     nav: [
       { text: 'Home', link: '/' },
-      // { text: 'JS', link: '/js/' },
+      { text: 'JS', link: '/js/' },
       // { text: 'Browser', link: '/web-browser/' },
       { text: 'CSS', link: '/css/' },
       // { text: 'Tools', link: '/tools/' },
@@ -28,7 +28,7 @@ module.exports = {
     sidebarDepth: 3,
     lastUpdated: 'Last Updated', // string | boolean
     sidebar: {
-      // '/js/': ecma,
+      '/js/': ecma,
       // '/web-browser/': browser,
       '/css/': css,
       // '/programming/': programming,
